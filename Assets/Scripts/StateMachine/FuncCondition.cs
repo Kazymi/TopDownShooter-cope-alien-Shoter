@@ -14,3 +14,19 @@ public class FuncCondition : ICondition
         return returnValue.Invoke();
     }
 }
+
+public class TemporaryCondition : ICondition
+{
+    private readonly float _time;
+
+    public TemporaryCondition(float time)
+    {
+        _time = time;
+    }
+    public bool IsConditionSuccess()
+    {
+        
+    }
+    
+    
+}
