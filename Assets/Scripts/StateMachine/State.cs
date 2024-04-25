@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public abstract class State
 {
-    public List<StateTransition> StateTransitions = new List<StateTransition>();
+    public List<ITransition> StateTransitions = new List<ITransition>();
 
     public virtual void OnStateEnter()
     {
@@ -11,6 +11,10 @@ public abstract class State
 
     public virtual void OnStateExit()
     {
+        foreach (var VARIABLE in StateTransitions)
+        {
+            
+        }
     }
 
     public virtual void OnUpdate(float deltaTime)

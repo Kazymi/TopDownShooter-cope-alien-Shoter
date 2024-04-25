@@ -39,6 +39,7 @@ public class CharacterStateMachine : MonoBehaviour
             new CharacterTriggerAnimationState(characterAnimatorController, CharacterAnimationType.IsRolling,
                 CharacterAnimationType.Rolling);
 
+        //состояние.добавлениеПерехода(переход(состонияние, условие)
 
         idleState.AddTransition(new StateTransition(moveState,
             new FuncCondition(() => inputController.MoveDirection != Vector3.zero)));

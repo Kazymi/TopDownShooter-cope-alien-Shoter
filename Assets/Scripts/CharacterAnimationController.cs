@@ -50,7 +50,7 @@ public class CharacterAnimationController
     }
 }
 
-public class AnimationTransitionCondition : ICondition
+public class AnimationTransitionCondition : ACondition
 {
     private readonly CharacterAnimationController _characterAnimationController;
     private readonly string _transitionName;
@@ -64,10 +64,27 @@ public class AnimationTransitionCondition : ICondition
         _exitTime = exitTime;
     }
 
-    public bool IsConditionSuccess()
+    public override bool IsConditionSuccess()
     {
         return _characterAnimationController.IsAnimationPlay(_transitionName) &&
                _characterAnimationController.NormalizedAnimationPlayTime() > _exitTime;
+    }
+}
+
+public abstract class ACondition : ICondition
+{
+    public abstract bool IsConditionSuccess();
+
+    public virtual void OnStateEntered()
+    {
+    }
+
+    public virtual void OnStateExited()
+    {
+    }
+
+    public virtual void OnTick(float deltaTime)
+    {
     }
 }
 

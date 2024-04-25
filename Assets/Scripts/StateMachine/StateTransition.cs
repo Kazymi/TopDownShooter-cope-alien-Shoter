@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class StateTransition
+public class StateTransition : AStateTransition
 {
     private State nextState;
-    private ICondition condition;
 
     public State NextState => nextState;
 
@@ -17,7 +16,7 @@ public class StateTransition
     }
 }
 
-public class RandomStateTransition
+public class RandomStateTransition : AStateTransition
 {
     private List<State> nextStates;
     private ICondition condition;
@@ -39,7 +38,7 @@ public class RandomStateTransition
     }
 }
 
-public class TransitionWithMultiCondition
+public class TransitionWithMultiCondition : ITransition
 {
     private State nextState;
     private List<ICondition> condition;
@@ -65,5 +64,61 @@ public class TransitionWithMultiCondition
     {
         this.nextState = nextState;
         this.condition = condition;
+    }
+
+    public void OnStateEntered()
+    {
+        foreach (var condition in condition)
+        {
+            condition.OnStateEntered();
+        }
+    }
+
+    public void OnStateExited()
+    {
+        foreach (var condition in condition)
+        {
+            condition.OnStateExited();
+        }
+    }
+
+    public void OnTick(float deltaTime)
+    {
+        foreach (var condition in condition)
+        {
+            condition.OnTick(deltaTime);
+        }
+    }
+}
+
+public interface ITransition
+{
+    State NextState { get; }
+    bool IsConditionSuccess { get; }
+    void OnStateEntered();
+    void OnStateExited();
+    void OnTick(float deltaTime);
+}
+
+public abstract class AStateTransition : ITransition
+{
+    public State NextState { get; }
+    public bool IsConditionSuccess { get; }
+
+    protected ICondition condition;
+
+    public void OnStateEntered()
+    {
+        condition.OnStateEntered();
+    }
+
+    public void OnStateExited()
+    {
+        condition.OnStateExited();
+    }
+
+    public void OnTick(float deltaTime)
+    {
+        condition.OnTick(deltaTime);
     }
 }

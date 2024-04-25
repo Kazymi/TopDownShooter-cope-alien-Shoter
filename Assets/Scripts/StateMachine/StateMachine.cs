@@ -13,6 +13,11 @@ public class StateMachine
 
         foreach (var stateTransition in currentState.StateTransitions)
         {
+            stateTransition.OnTick(deltaTime);
+        }
+
+        foreach (var stateTransition in currentState.StateTransitions)
+        {
             if (stateTransition.IsConditionSuccess)
             {
                 SetState(stateTransition.NextState);
@@ -29,8 +34,17 @@ public class StateMachine
     public void SetState(State nextState)
     {
         currentState.OnStateExit();
+        foreach (var stateTransition in currentState.StateTransitions)
+        {
+            stateTransition.OnStateExited();
+        }
+
         currentState = nextState;
         currentState.OnStateEnter();
+        foreach (var stateTransition in currentState.StateTransitions)
+        {
+            stateTransition.OnStateEntered();
+        }
     }
 
     public StateMachine(State defaultState)

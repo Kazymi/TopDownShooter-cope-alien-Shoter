@@ -1,6 +1,7 @@
 ﻿using System;
+using UnityEngine;
 
-public class FuncCondition : ICondition
+public class FuncCondition : ACondition
 {
     private Func<bool> returnValue;
 
@@ -9,24 +10,35 @@ public class FuncCondition : ICondition
         this.returnValue = returnValue;
     }
 
-    public bool IsConditionSuccess()
+    public override bool IsConditionSuccess()
     {
         return returnValue.Invoke();
     }
 }
 
-public class TemporaryCondition : ICondition
+public class TemporaryCondition : ACondition
 {
     private readonly float _time;
+
+    private float currentTime;
 
     public TemporaryCondition(float time)
     {
         _time = time;
     }
-    public bool IsConditionSuccess()
+
+    public override bool IsConditionSuccess()
     {
-        
+        return currentTime >= _time;
     }
-    
-    
+
+    public override void OnStateEntered()
+    {
+        currentTime = 0;
+    }
+
+    public override void OnTick(float deltaTime)
+    {
+        currentTime += deltaTime;
+    }
 }
