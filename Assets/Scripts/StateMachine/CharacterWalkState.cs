@@ -2,11 +2,11 @@
 
 public class CharacterWalkState : State
 {
-    private readonly CharacterAnimationController _characterAnimationController;
-    private readonly float _speed;
+    protected readonly CharacterAnimationController _characterAnimationController;
+    protected readonly float _speed;
     private readonly float _speedRotate;
-    private readonly Rigidbody _characterBody;
-    private readonly InputController _inputController;
+    protected readonly Rigidbody _characterBody;
+    protected readonly InputController _inputController;
 
     public CharacterWalkState(CharacterAnimationController characterAnimationController, float speed, float speedRotate,
         Rigidbody characterBody, InputController inputController)
@@ -35,7 +35,7 @@ public class CharacterWalkState : State
         Rotate();
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         _characterBody.velocity = _inputController.MoveDirection * _speed;
     }
@@ -47,5 +47,50 @@ public class CharacterWalkState : State
         _characterBody.rotation =
             Quaternion.Lerp(_characterBody.transform.rotation, Quaternion.LookRotation(newDirection),
                 _speedRotate * Time.deltaTime);
+    }
+}
+
+public class CharacterRunState : CharacterWalkState
+{
+    private float runFloat;
+
+    public CharacterRunState(CharacterAnimationController characterAnimationController, float speed, float speedRotate,
+        Rigidbody characterBody, InputController inputController) : base(characterAnimationController, speed,
+        speedRotate, characterBody, inputController)
+    {
+    }
+
+    public override void OnUpdate(float deltaTime)
+    {
+        base.OnUpdate(deltaTime);
+        if (runFloat < 1)
+        {
+            runFloat += deltaTime;
+        }
+        else
+        {
+            runFloat = 1;
+        }
+
+        _characterAnimationController.SetFloat(CharacterAnimationType.RunFloat, runFloat);
+    }
+
+    protected override void Move()
+    {
+        _characterBody.velocity = _inputController.MoveDirection * _speed * 2;
+    }
+
+    public override void OnStateEnter()
+    {
+        _characterAnimationController.SetBool(CharacterAnimationType.Walk, true);
+    }
+
+    public override void OnStateExit()
+    {
+        _characterAnimationController.SetBool(CharacterAnimationType.Walk, false);
+        _characterBody.velocity = Vector3.zero;
+
+        runFloat = 0;
+        _characterAnimationController.SetFloat(CharacterAnimationType.RunFloat, runFloat);
     }
 }

@@ -35,21 +35,22 @@ public class CharacterStateMachine : MonoBehaviour
         var idleState = new CharacterIdleState(characterAnimatorController);
         var moveState =
             new CharacterWalkState(characterAnimatorController, speed, speedRotate, rigidbody, inputController);
-        var rollingState =
-            new CharacterTriggerAnimationState(characterAnimatorController, CharacterAnimationType.IsRolling,
-                CharacterAnimationType.Rolling);
+        var runState =
+            new CharacterRunState(characterAnimatorController, speed, speedRotate, rigidbody, inputController);
 
-        //состояние.добавлениеПерехода(переход(состонияние, условие)
 
         idleState.AddTransition(new StateTransition(moveState,
             new FuncCondition(() => inputController.MoveDirection != Vector3.zero)));
 
         moveState.AddTransition(new StateTransition(idleState,
             new FuncCondition(() => inputController.MoveDirection == Vector3.zero)));
-        moveState.AddTransition(new StateTransition(rollingState, new FuncCondition(() => inputController.IsRolling)));
 
-        rollingState.AddTransition(new StateTransition(idleState,
-            new AnimationTransitionCondition(characterAnimatorController, "Rolling")));
+        moveState.AddTransition(new StateTransition(runState, new FuncCondition(() => inputController.IsRunning)));
+
+        runState.AddTransition(new StateTransition(idleState,
+            new FuncCondition(() => inputController.MoveDirection == Vector3.zero)));
+        runState.AddTransition(new StateTransition(moveState,
+            new FuncCondition(() => inputController.IsRunning == false)));
 
         _stateMachine = new StateMachine(idleState);
     }

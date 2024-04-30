@@ -5,15 +5,14 @@ public class StateTransition : AStateTransition
 {
     private State nextState;
 
-    public State NextState => nextState;
-
-    public bool IsConditionSuccess => condition.IsConditionSuccess();
-
     public StateTransition(State nextState, ICondition condition)
     {
         this.nextState = nextState;
         this.condition = condition;
     }
+
+    public override State NextState => nextState;
+    public override bool IsConditionSuccess => condition.IsConditionSuccess();
 }
 
 public class RandomStateTransition : AStateTransition
@@ -21,9 +20,8 @@ public class RandomStateTransition : AStateTransition
     private List<State> nextStates;
     private ICondition condition;
 
-    public State NextState => nextStates[Random.Range(0, nextStates.Count)];
-
-    public bool IsConditionSuccess => condition.IsConditionSuccess();
+    public override State NextState => nextStates[Random.Range(0, nextStates.Count)];
+    public override bool IsConditionSuccess => condition.IsConditionSuccess();
 
     public RandomStateTransition(State firstState, ICondition condition)
     {
@@ -102,8 +100,8 @@ public interface ITransition
 
 public abstract class AStateTransition : ITransition
 {
-    public State NextState { get; }
-    public bool IsConditionSuccess { get; }
+    public abstract State NextState { get; }
+    public abstract bool IsConditionSuccess { get; }
 
     protected ICondition condition;
 
