@@ -40,8 +40,10 @@ public class CrafteInterplayObject : InterplayObject
             foreach (var craftConfiguration in craftConfigurations)
             {
                 var transformConfiguration = craftConfiguration.AttachItem.transform;
+                var returnToPoolObject = craftConfiguration.AttachItem;
                 transformConfiguration.DOScale(Vector3.zero, 0.3f)
-                    .OnComplete(() => Destroy(transformConfiguration.gameObject));
+                    .OnComplete(() => returnToPoolObject.ReturnToPool());
+                craftConfiguration.AttachItem = null;
             }
 
             StartCoroutine(SpawnCraftableObject());
@@ -51,9 +53,10 @@ public class CrafteInterplayObject : InterplayObject
     private IEnumerator SpawnCraftableObject()
     {
         yield return new WaitForSeconds(0.3f);
-        var newObject = Instantiate(craftItem.gameObject);
+        var newObject = ItemSpawner.Instance.GetItemByType(ItemType.Cookies);
         newObject.transform.position = endCraftPosition.position;
         newObject.transform.rotation = endCraftPosition.rotation;
+        newObject.transform.DOKill();
         newObject.transform.DOShakeScale(0.4f, 0.3f);
     }
 }

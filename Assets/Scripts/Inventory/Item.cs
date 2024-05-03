@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Outline))]
-public class Item : MonoBehaviour
+public class Item : MonoPooled
 {
     [field: SerializeField] public ItemType ItemType { get; private set; }
     [field: SerializeField] public Vector3 InventoryRotation { get; private set; }

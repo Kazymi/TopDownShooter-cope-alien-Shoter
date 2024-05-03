@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
-public class InterplayListener : MonoBehaviour
+public class PlayerHandInventory : MonoBehaviour
 {
     public void Initialize(PlayerListener playerListener)
     {
@@ -16,12 +15,12 @@ public class InterplayListener : MonoBehaviour
             if (playerListener.LastObject != null)
             {
                 yield return new WaitForSeconds(0.3f);
-                playerListener.UpdateClosestInterplayObject();
+                playerListener.UpdateClosestHandItem();
             }
             else
             {
                 yield return new WaitForSeconds(0.1f);
-                playerListener.UpdateClosestInterplayObject();
+                playerListener.UpdateClosestHandItem();
             }
         }
     }

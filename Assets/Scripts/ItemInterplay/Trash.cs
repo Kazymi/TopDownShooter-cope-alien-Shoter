@@ -17,9 +17,6 @@ public class Trash : InterplayObject
         {
             trashWaste.DOLocalRotate(new Vector3(0, 0, 0), 0.3f);
         });
-        itemLast.transform.DOJump(endPosition.position, 1.4f, 1, 0.6f).OnComplete(() =>
-        {
-            Destroy(itemLast.gameObject);
-        });
+        itemLast.transform.DOJump(endPosition.position, 1.4f, 1, 0.6f).OnComplete(() => { itemLast.ReturnToPool(); });
     }
 }

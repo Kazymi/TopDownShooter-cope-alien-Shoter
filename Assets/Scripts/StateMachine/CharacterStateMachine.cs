@@ -10,6 +10,7 @@ public class CharacterStateMachine : MonoBehaviour
 
     [SerializeField] private string currentState;
 
+    public CharacterAnimationController CharacterAnimationController { get; private set; }
     private StateMachine _stateMachine;
 
     private void Awake()
@@ -31,7 +32,7 @@ public class CharacterStateMachine : MonoBehaviour
     private void InitializeStateMachine()
     {
         var characterAnimatorController = new CharacterAnimationController(animator);
-
+        CharacterAnimationController = characterAnimatorController;
         var idleState = new CharacterIdleState(characterAnimatorController);
         var moveState =
             new CharacterWalkState(characterAnimatorController, speed, speedRotate, rigidbody, inputController);

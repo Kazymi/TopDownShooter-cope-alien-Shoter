@@ -7,6 +7,7 @@ using UnityEngine;
 public class CharacterInvetory : MonoBehaviour
 {
     [SerializeField] private InputController inputController;
+    [SerializeField] private PlayerHandInventory playerHandInventory;
     [SerializeField] private InterplayListener interplayListener;
 
     [Header("Item searcher settings")] [SerializeField]
@@ -14,19 +15,27 @@ public class CharacterInvetory : MonoBehaviour
 
     [SerializeField] private Transform searchCenter;
 
+    [Header("Hand item settings")] [SerializeField]
+    private Transform handTransform;
+
+    [SerializeField] private CharacterStateMachine characterStateMachine;
+
     [Header("Inventory setting")] [SerializeField]
     private Transform startInventoryPosition;
 
     [SerializeField] private Vector3 nextItemInterval;
 
-    private PlayerListener itemSearcher;
+    private PlayerListener playerListener;
+    private PlayerHandItem currentHandItem;
+
     private List<Item> inventoryStorage = new List<Item>();
 
     private void Awake()
     {
-        itemSearcher = new PlayerListener(radius, searchCenter, transform);
+        playerListener = new PlayerListener(radius, searchCenter, transform);
         StartCoroutine(UpdateClosestItem());
-        interplayListener.Initialize(itemSearcher);
+        interplayListener.Initialize(playerListener);
+        playerHandInventory.Initialize(playerListener);
     }
 
     private void Update()
@@ -34,7 +43,51 @@ public class CharacterInvetory : MonoBehaviour
         if (inputController.InInteractItem)
         {
             AddNearestItem();
-            itemSearcher.LastObject?.IterplayObject(this);
+            playerListener.LastObject?.IterplayObject(this);
+            AddNearestHandItem();
+        }
+
+        if (inputController.IsDropHandItem)
+        {
+            DropHandItem();
+        }
+    }
+
+    private void DropHandItem()
+    {
+        if (currentHandItem != null)
+        {
+            currentHandItem.IsSelectable = true;
+            currentHandItem.ItemDeSelected();
+            currentHandItem.transform.SetParent(null);
+            characterStateMachine.CharacterAnimationController.SetBool(currentHandItem.CharacterAnimation, false);
+            currentHandItem = null;
+        }
+    }
+
+    private void SortStorage()
+    {
+        for (int i = 0; i < inventoryStorage.Count; i++)
+        {
+            inventoryStorage[i].transform.DOKill();
+            inventoryStorage[i].transform.DOLocalMove(nextItemInterval * i, 0.5f);
+            inventoryStorage[i].transform.DOLocalRotate(inventoryStorage[i].InventoryRotation, 0.4f);
+        }
+    }
+
+    private void AddNearestHandItem()
+    {
+        if (currentHandItem == null && playerListener.LastHandItem)
+        {
+            var handItem = playerListener.LastHandItem;
+            handItem.IsSelectable = false;
+            handItem.transform.SetParent(handTransform);
+            handItem.transform.DOKill();
+            handItem.transform.DOLocalJump(handItem.AttachPosition, 0.8f, 1, 0.5f);
+            handItem.transform.DOLocalRotate(handItem.AttachRotation, 0.5f);
+            characterStateMachine.CharacterAnimationController.SetBool(handItem.CharacterAnimation, true);
+            handItem.ItemSelected();
+            currentHandItem = handItem;
         }
     }
 
@@ -57,14 +110,39 @@ public class CharacterInvetory : MonoBehaviour
         return null;
     }
 
-    private void SortStorage()
+    public void AddNewHandItem(PlayerHandItem playerHandItem)
     {
-        for (int i = 0; i < inventoryStorage.Count; i++)
+        var handItem = playerHandItem;
+        handItem.IsSelectable = false;
+        handItem.transform.SetParent(handTransform);
+        handItem.transform.DOKill();
+        handItem.transform.localPosition = handItem.AttachPosition;
+        handItem.transform.localRotation = Quaternion.Euler(handItem.AttachRotation);
+        handItem.transform.DOShakeScale(0.4f, 0.3f);
+        characterStateMachine.CharacterAnimationController.SetBool(handItem.CharacterAnimation, true);
+        handItem.ItemSelected();
+        currentHandItem = handItem;
+    }
+
+    public PlayerHandItem GetHandItem()
+    {
+        var returnValue = currentHandItem;
+        DropHandItem();
+
+        return returnValue;
+    }
+
+    public PlayerHandItem GetHandItemByType(HandItemType handItemType)
+    {
+        if (currentHandItem == null || currentHandItem.HandItemType != handItemType)
         {
-            inventoryStorage[i].transform.DOKill();
-            inventoryStorage[i].transform.DOLocalMove(nextItemInterval * i, 0.5f);
-            inventoryStorage[i].transform.DOLocalRotate(inventoryStorage[i].InventoryRotation, 0.4f);
+            return null;
         }
+
+        var returnValue = currentHandItem;
+        DropHandItem();
+
+        return returnValue;
     }
 
     public Item GetLastItem()
@@ -83,7 +161,7 @@ public class CharacterInvetory : MonoBehaviour
 
     public void AddNearestItem()
     {
-        var lastItem = itemSearcher.LastItem;
+        var lastItem = playerListener.LastItem;
         if (lastItem)
         {
             lastItem.ItemSelected();
@@ -92,7 +170,7 @@ public class CharacterInvetory : MonoBehaviour
             lastItem.transform.DOLocalJump(nextItemInterval * inventoryStorage.Count, 1.4f, 1, 0.7f);
             lastItem.transform.DOLocalRotate(lastItem.InventoryRotation, 0.7f);
             inventoryStorage.Add(lastItem);
-            itemSearcher.UpdateClosestItem();
+            playerListener.UpdateClosestItem();
         }
     }
 
@@ -102,15 +180,15 @@ public class CharacterInvetory : MonoBehaviour
     {
         while (true)
         {
-            if (itemSearcher.LastItem != null)
+            if (playerListener.LastItem != null)
             {
                 yield return new WaitForSeconds(0.3f);
-                itemSearcher.UpdateClosestItem();
+                playerListener.UpdateClosestItem();
             }
             else
             {
                 yield return new WaitForSeconds(0.1f);
-                itemSearcher.UpdateClosestItem();
+                playerListener.UpdateClosestItem();
             }
         }
     }

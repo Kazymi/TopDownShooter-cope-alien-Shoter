@@ -94,5 +94,8 @@ public enum CharacterAnimationType
     Walk,
     RunFloat,
     Rolling,
-    IsRolling
+    IsRolling,
+    IsItemGrab,
+    Clear,
+    AxeAttack,
 }
