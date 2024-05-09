@@ -25,11 +25,13 @@ public class Item : MonoPooled
 
     public void ItemSelected()
     {
+        gameObject.layer = 6;
         IsSelectable = false;
     }
 
     public void ItemDeSelected()
     {
+        gameObject.layer = 0;
         IsSelectable = true;
     }
 }
@@ -40,4 +42,5 @@ public enum ItemType
     Peaches,
     Cookies,
     Clear,
+    Candy,
 }

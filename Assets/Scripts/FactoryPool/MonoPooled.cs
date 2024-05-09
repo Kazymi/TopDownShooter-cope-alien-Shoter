@@ -7,9 +7,16 @@ public class MonoPooled : MonoBehaviour, IPooled
 
     public void ReturnToPool()
     {
+        ReturnedToPool?.Invoke();
+
+        if (parentPool == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         gameObject.SetActive(false);
         parentPool.Push(this);
-        ReturnedToPool?.Invoke();
     }
 
     public virtual void Initialize()

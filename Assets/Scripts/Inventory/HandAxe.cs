@@ -16,6 +16,6 @@
     public override void ItemDeSelected()
     {
         base.ItemDeSelected();
-        characterAnimationController.SetBool(CharacterAnimationType.AxeAttack, inputController.IsAttack);
+        characterAnimationController.SetBool(CharacterAnimationType.AxeAttack, false);
     }
 }
