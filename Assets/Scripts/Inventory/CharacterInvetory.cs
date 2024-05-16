@@ -65,6 +65,11 @@ public class CharacterInvetory : MonoBehaviour
         }
     }
 
+    public bool IsHandEmpty()
+    {
+        return currentHandItem == null;
+    }
+    
     private void SortStorage()
     {
         for (int i = 0; i < inventoryStorage.Count; i++)

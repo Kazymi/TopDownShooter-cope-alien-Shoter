@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using Cinemachine;
+using UnityEngine;
 
 public class CharacterStateMachine : MonoBehaviour
 {
+    [SerializeField] private CinemachineVirtualCamera walkCamera;
+    [SerializeField] private CinemachineVirtualCamera runCamera;
+    
     [SerializeField] private InputController inputController;
     [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody rigidbody;
@@ -22,6 +26,8 @@ public class CharacterStateMachine : MonoBehaviour
     {
         _stateMachine.OnUpdate();
         currentState = _stateMachine.CurrentState.ToString();
+        walkCamera.Priority = inputController.IsRunning ? 0 : 1;
+        runCamera.Priority = inputController.IsRunning ? 1 : 0;
     }
 
     private void FixedUpdate()

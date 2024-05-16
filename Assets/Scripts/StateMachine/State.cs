@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public abstract class State
+public class State
 {
     public List<ITransition> StateTransitions = new List<ITransition>();
 

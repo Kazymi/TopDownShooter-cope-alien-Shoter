@@ -145,6 +145,7 @@ public enum CharacterAnimationType
     IsItemGrab,
     Clear,
     AxeAttack,
+    Angry,
 }
 
 public enum NpcAnimationType

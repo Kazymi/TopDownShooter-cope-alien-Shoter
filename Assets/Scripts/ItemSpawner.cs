@@ -59,7 +59,7 @@ public class ItemSpawner : MonoBehaviour
         yield return new WaitForSeconds(10);
         var newDamageableObject = damageableStorage[damageableType].Pull();
         newDamageableObject.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-        newDamageableObject.transform.DOShakeScale(0.4f, 0.3f);
+        newDamageableObject.transform.DOShakeScale(0.4f, 0.3f).OnComplete(() => newDamageableObject.transform.localScale = Vector3.one);
         newDamageableObject.Initialize();
     }
 

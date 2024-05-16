@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 6107389396604549152}
   - component: {fileID: 795759720377128438}
   - component: {fileID: 3200812491548356797}
+  - component: {fileID: 3639550586395637038}
   m_Layer: 0
   m_Name: Pudu
   m_TagString: Untagged
@@ -567,13 +568,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8081537611871617202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b2929e1f4e9d794489cdc71e9645e20, type: 3}
+  m_Script: {fileID: 11500000, guid: 97c68a4f1a9680247bc65b71e945d77b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   damageableType: 1
   maxHealth: 15
   floorPosition: {fileID: 160245408672228773}
-  size: {x: 13.65, y: 13.65}
+  size: {x: 12, y: 12}
   animator: {fileID: 7484696686830623155}
   navMeshAgent: {fileID: 6107389396604549152}
 --- !u!65 &3200812491548356797
@@ -597,6 +598,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3639550586395637038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8081537611871617202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d24706e7270d6f42a626f7bb87a9cd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radius: {x: 4, y: 4}
+  dropItem: 5
 --- !u!1 &8157255925873932010
 GameObject:
   m_ObjectHideFlags: 0

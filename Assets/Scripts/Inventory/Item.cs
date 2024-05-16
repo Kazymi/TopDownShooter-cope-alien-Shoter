@@ -43,4 +43,6 @@ public enum ItemType
     Cookies,
     Clear,
     Candy,
+    Meat,
+    RawMeat,
 }
