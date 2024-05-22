@@ -10,6 +10,7 @@ public class ItemSpriteStorage : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(this);
     }
 
     public Sprite GetSpriteByType(ItemType itemType)

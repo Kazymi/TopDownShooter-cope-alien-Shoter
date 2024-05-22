@@ -489,6 +489,7 @@ GameObject:
   - component: {fileID: 795759720377128438}
   - component: {fileID: 3200812491548356797}
   - component: {fileID: 3639550586395637038}
+  - component: {fileID: 3406614526739167021}
   m_Layer: 0
   m_Name: Pudu
   m_TagString: Untagged
@@ -612,6 +613,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   radius: {x: 4, y: 4}
   dropItem: 5
+--- !u!114 &3406614526739167021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8081537611871617202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03ce27496713473439078a774a1a87e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: Pudu
+  saveKeyRandomizer: 1
+  isSavePosition: 1
+  isSaveInventory: 0
+  isSaveHealth: 1
+  isSaveNPC: 1
+  SavePositionConfiguration:
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: {x: 0, y: 0, z: 0, w: 0}
+  InventorySaveHelper:
+    <characterInventory>k__BackingField: {fileID: 0}
+    savedItem: 
+    HandItemType: 0
+  SaveHealthHelper:
+    <Damageable>k__BackingField: {fileID: 795759720377128438}
+    SaveHealth: 0
+  NPCSpawnSaveHelper:
+    <NPCType>k__BackingField: 1
+    DamageableType: 0
 --- !u!1 &8157255925873932010
 GameObject:
   m_ObjectHideFlags: 0

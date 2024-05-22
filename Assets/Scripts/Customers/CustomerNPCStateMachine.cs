@@ -16,11 +16,18 @@ public class CustomerNPCStateMachine : MonoPooled
     private CharacterAnimationController characterAnimationController;
     public bool IsItemsGrab;
 
+    private Wallet wallet;
+
     private void Awake()
     {
         characterAnimationController = new CharacterAnimationController(GetComponent<Animator>());
     }
 
+    private void Start()
+    {
+        wallet = ServiceLocator.GetService<Wallet>();
+    }
+    
     private void Update()
     {
         stateMachine.OnUpdate();
@@ -77,7 +84,7 @@ public class CustomerNPCStateMachine : MonoPooled
             if (IsItemsGrab)
             {
                 customerUi.DisableImage();
-                Wallet.Instance.AddMoney(100);
+                wallet.AddMoney(100);
             }
 
             return IsItemsGrab;
@@ -88,7 +95,7 @@ public class CustomerNPCStateMachine : MonoPooled
             if (IsItemsGrab)
             {
                 customerUi.DisableImage();
-                Wallet.Instance.AddMoney(50);
+                wallet.AddMoney(50);
             }
 
             return IsItemsGrab;

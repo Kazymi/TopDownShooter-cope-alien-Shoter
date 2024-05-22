@@ -26,9 +26,13 @@ public class CharacterInvetory : MonoBehaviour
     [SerializeField] private Vector3 nextItemInterval;
 
     private PlayerListener playerListener;
+
     private PlayerHandItem currentHandItem;
 
     private List<Item> inventoryStorage = new List<Item>();
+
+    public PlayerHandItem CurrentHandItem => currentHandItem;
+    public List<Item> InventoryItem => inventoryStorage;
 
     private void Awake()
     {
@@ -69,7 +73,7 @@ public class CharacterInvetory : MonoBehaviour
     {
         return currentHandItem == null;
     }
-    
+
     private void SortStorage()
     {
         for (int i = 0; i < inventoryStorage.Count; i++)
@@ -94,6 +98,15 @@ public class CharacterInvetory : MonoBehaviour
             handItem.ItemSelected();
             currentHandItem = handItem;
         }
+    }
+
+    public void AddItem(Item item)
+    {
+        item.ItemSelected();
+        item.transform.SetParent(startInventoryPosition);
+        item.transform.localPosition = nextItemInterval * inventoryStorage.Count;
+        item.transform.localRotation = Quaternion.Euler(item.InventoryRotation);
+        inventoryStorage.Add(item);
     }
 
     public Item GetItemByType(ItemType itemType)

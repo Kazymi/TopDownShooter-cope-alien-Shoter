@@ -22,13 +22,10 @@ public class ItemSpawner : MonoBehaviour
 
     private Dictionary<EffectType, IPool<TemporaryMonoObject>> effectStorage =
         new Dictionary<EffectType, IPool<TemporaryMonoObject>>();
-
-    public static ItemSpawner Instance;
-
-
+    
     private void Awake()
     {
-        Instance = this;
+        ServiceLocator.Subscribe<ItemSpawner>(this);
     }
 
     private void Start()
@@ -53,6 +50,12 @@ public class ItemSpawner : MonoBehaviour
         StartCoroutine(SpawnDamageableTimer(damageableType, spawnPosition, spawnRotation));
     }
 
+    public Damageable SpawnNewDameableItem(DamageableType damageableType)
+    {
+        var newDamageableObject = damageableStorage[damageableType].Pull();
+        newDamageableObject.Initialize();
+        return newDamageableObject;
+    }
     private IEnumerator SpawnDamageableTimer(DamageableType damageableType, Vector3 spawnPosition,
         Quaternion spawnRotation)
     {

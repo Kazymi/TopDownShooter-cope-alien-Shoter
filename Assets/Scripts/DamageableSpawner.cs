@@ -9,9 +9,19 @@ public class DamageableSpawner : MonoBehaviour
 
     private void Start()
     {
-        for (int i = 0; i < amount; i++)
+        if (ServiceLocator.GetService<SaveData>().IsFirstLaunch == false)
         {
-            ItemSpawner.Instance.SpawnNewDamageableItem(DamageableType.Pudu, transform.position, transform.rotation);
+            for (int i = 0; i < amount; i++)
+            {
+                ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation);
+            }
+
+            ServiceLocator.GetService<SaveData>().IsFirstLaunch = true;
         }
+    }
+
+    public void Spawn()
+    {
+        ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation);
     }
 }

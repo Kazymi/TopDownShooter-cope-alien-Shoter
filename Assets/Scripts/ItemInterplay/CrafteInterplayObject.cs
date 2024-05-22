@@ -8,6 +8,8 @@ public class CrafteInterplayObject : InterplayObject
     [SerializeField] private Item craftItem;
     [SerializeField] private Transform endCraftPosition;
 
+    private ItemSpawner itemSpawner;
+
     public override void IterplayObject(CharacterInvetory characterInvetory)
     {
         var allObjectAttach = true;
@@ -52,8 +54,9 @@ public class CrafteInterplayObject : InterplayObject
 
     private IEnumerator SpawnCraftableObject()
     {
+        itemSpawner ??= ServiceLocator.GetService<ItemSpawner>();
         yield return new WaitForSeconds(0.3f);
-        var newObject = ItemSpawner.Instance.GetItemByType(ItemType.Cookies);
+        var newObject = itemSpawner.GetItemByType(ItemType.Cookies);
         newObject.transform.position = endCraftPosition.position;
         newObject.transform.rotation = endCraftPosition.rotation;
         newObject.transform.DOKill();

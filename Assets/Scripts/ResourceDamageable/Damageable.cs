@@ -9,6 +9,8 @@ public class Damageable : MonoPooled, IDamageable
 
     protected int currentHealth;
 
+    public int CurrentHealth => currentHealth;
+
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -35,6 +37,10 @@ public class Damageable : MonoPooled, IDamageable
         HealthUpdated();
     }
 
+    public void UpdateCurrentHealth(int health)
+    {
+        currentHealth = health;
+    }
     protected virtual void HealthUpdated()
     {
         if (currentHealth > 0)

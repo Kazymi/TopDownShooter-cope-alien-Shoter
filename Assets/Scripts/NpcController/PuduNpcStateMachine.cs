@@ -46,7 +46,7 @@ public class PuduNpcStateMachine : Damageable
         {
             return;
         }
-        
+
         var currentPercent = (float) currentHealth / maxHealth;
         currentPercent *= 100f;
         UpdatePercent(currentPercent);
@@ -57,7 +57,7 @@ public class PuduNpcStateMachine : Damageable
         {
             return;
         }
-
+        
         stateMachine.SetState(deadState);
     }
 
@@ -95,6 +95,7 @@ public class PuduNpcStateMachine : Damageable
         runState.SetPosition(endPosition);
         stateMachine.SetState(runState);
     }
+
 
     protected virtual void InitializeStateMachine()
     {

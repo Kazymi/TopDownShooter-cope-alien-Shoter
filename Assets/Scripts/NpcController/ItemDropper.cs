@@ -8,6 +8,7 @@ public class ItemDropper : MonoBehaviour
     [SerializeField] private Vector2 radius;
     [SerializeField] private ItemType dropItem;
 
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
