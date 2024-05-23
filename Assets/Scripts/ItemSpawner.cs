@@ -22,9 +22,11 @@ public class ItemSpawner : MonoBehaviour
 
     private Dictionary<EffectType, IPool<TemporaryMonoObject>> effectStorage =
         new Dictionary<EffectType, IPool<TemporaryMonoObject>>();
-    
+
+    public static ItemSpawner Instance;
     private void Awake()
     {
+        Instance = this;
         ServiceLocator.Subscribe<ItemSpawner>(this);
     }
 
