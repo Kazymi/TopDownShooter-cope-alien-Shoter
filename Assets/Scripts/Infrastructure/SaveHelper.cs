@@ -9,12 +9,12 @@ public class SaveHelper : MonoBehaviour
     public string key;
 
     [SerializeField] private bool saveKeyRandomizer;
-    
+
     [SerializeField] private bool isSavePosition;
     [SerializeField] private bool isSaveInventory;
     [SerializeField] private bool isSaveHealth;
     [SerializeField] private bool isSaveNPC;
-    
+
     [HideIf("isSavePosition", false)] public SavePositionConfiguration SavePositionConfiguration;
     [HideIf("isSaveInventory", false)] public InventorySaveHelper InventorySaveHelper;
     [HideIf("isSaveHealth", false)] public SaveHealthHelper SaveHealthHelper;
@@ -38,13 +38,14 @@ public class SaveHelper : MonoBehaviour
         }
 
         bootstrap = ServiceLocator.GetService<Bootstrap>();
-       
-            bootstrap.OnSave += Save;
-            bootstrap.OnLoad += Load;
-            isSubscribe = true;
         
+        bootstrap.OnSave += Save;
+        bootstrap.OnLoad += Load;
+        isSubscribe = true;
     }
 
+    
+    
     private void Load()
     {
         var rigidBody = GetComponent<Rigidbody>();
@@ -64,6 +65,7 @@ public class SaveHelper : MonoBehaviour
                 transform.position = savePositionConfiguration.Position;
                 transform.rotation = savePositionConfiguration.Rotation;
                 SavePositionConfiguration = savePositionConfiguration;
+                gameObject.SendMessage("SaveCompleted",SendMessageOptions.DontRequireReceiver);
             }
 
             if (isSaveInventory)
@@ -77,12 +79,17 @@ public class SaveHelper : MonoBehaviour
                 }
 
                 var handItem = saveInventroy.HandItemType;
+                if (handItem == HandItemType.Clear)
+                {
+                    return;
+                }
                 inventory.AddNewHandItem(itemSpawner.GetHandItemByType(handItem));
             }
 
             if (isSaveHealth)
             {
-                SaveHealthHelper.Damageable.UpdateCurrentHealth(saveDataFix.SaveConfiguration.SaveHealthHelper.SaveHealth);
+                SaveHealthHelper.Damageable.UpdateCurrentHealth(saveDataFix.SaveConfiguration.SaveHealthHelper
+                    .SaveHealth);
                 SaveHealthHelper.SaveHealth = saveDataFix.SaveConfiguration.SaveHealthHelper.SaveHealth;
             }
         }
@@ -125,8 +132,11 @@ public class SaveHelper : MonoBehaviour
                 saveDataFix.SaveConfiguration.InventorySaveHelper.savedItem.Add(item.ItemType);
             }
 
-            saveDataFix.SaveConfiguration.InventorySaveHelper.HandItemType =
-                InventorySaveHelper.characterInventory.CurrentHandItem.HandItemType;
+            if (InventorySaveHelper.characterInventory.CurrentHandItem != null)
+            {
+                saveDataFix.SaveConfiguration.InventorySaveHelper.HandItemType =
+                    InventorySaveHelper.characterInventory.CurrentHandItem.HandItemType;
+            }
         }
 
         if (isSaveHealth)
@@ -138,7 +148,7 @@ public class SaveHelper : MonoBehaviour
         if (isSaveNPC)
         {
             saveDataFix.SaveConfiguration.NPCSpawnSaveHelper = new NPCSpawnSaveHelper();
-            saveDataFix.SaveConfiguration.NPCSpawnSaveHelper.DamageableType = DamageableType.Pudu;
+            saveDataFix.SaveConfiguration.NPCSpawnSaveHelper.DamageableType = NPCSpawnSaveHelper.NPCType;
             saveDataFix.SaveConfiguration.IsNPC = true;
         }
 
@@ -159,7 +169,7 @@ public class InventorySaveHelper
     [field: SerializeField] public CharacterInvetory characterInventory { get; set; }
 
     public List<ItemType> savedItem = new List<ItemType>();
-    public HandItemType HandItemType;
+    public HandItemType HandItemType = HandItemType.Clear;
 }
 
 [Serializable]

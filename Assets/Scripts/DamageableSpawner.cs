@@ -13,7 +13,7 @@ public class DamageableSpawner : MonoBehaviour
         {
             for (int i = 0; i < amount; i++)
             {
-                ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation);
+                ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation,false);
             }
 
             ServiceLocator.GetService<SaveData>().IsFirstLaunch = true;
@@ -22,6 +22,6 @@ public class DamageableSpawner : MonoBehaviour
 
     public void Spawn()
     {
-        ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation);
+        ItemSpawner.Instance.SpawnNewDamageableItem(damageableType, transform.position, transform.rotation,false);
     }
 }

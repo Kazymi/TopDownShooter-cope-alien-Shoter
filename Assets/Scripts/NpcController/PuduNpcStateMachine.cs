@@ -40,6 +40,11 @@ public class PuduNpcStateMachine : Damageable
         itemDropper = GetComponent<ItemDropper>();
     }
 
+    public void SaveCompleted()
+    {
+        startPosition = floorPosition.position;
+    }
+
     protected override void HealthUpdated()
     {
         if (stateMachine.CurrentState == deadState)

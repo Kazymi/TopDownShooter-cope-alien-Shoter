@@ -24,17 +24,12 @@ public class ItemSpawner : MonoBehaviour
         new Dictionary<EffectType, IPool<TemporaryMonoObject>>();
 
     public static ItemSpawner Instance;
+
     private void Awake()
     {
         Instance = this;
         ServiceLocator.Subscribe<ItemSpawner>(this);
-    }
-
-    private void Start()
-    {
         Initialize();
-        var bucket = GetHandItemByType(HandItemType.Bucket);
-        bucket.transform.position = transform.position;
     }
 
     public PlayerHandItem GetHandItemByType(HandItemType handItemType)
@@ -47,9 +42,21 @@ public class ItemSpawner : MonoBehaviour
         return itemStorage[itemType].Pull();
     }
 
-    public void SpawnNewDamageableItem(DamageableType damageableType, Vector3 spawnPosition, Quaternion spawnRotation)
+    public void SpawnNewDamageableItem(DamageableType damageableType, Vector3 spawnPosition, Quaternion spawnRotation,
+        bool isCooldown = true)
     {
-        StartCoroutine(SpawnDamageableTimer(damageableType, spawnPosition, spawnRotation));
+        if (isCooldown)
+        {
+            StartCoroutine(SpawnDamageableTimer(damageableType, spawnPosition, spawnRotation));
+        }
+        else
+        {
+            var newDamageableObject = damageableStorage[damageableType].Pull();
+            newDamageableObject.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+            newDamageableObject.transform.DOShakeScale(0.4f, 0.3f)
+                .OnComplete(() => newDamageableObject.transform.localScale = Vector3.one);
+            newDamageableObject.Initialize();
+        }
     }
 
     public Damageable SpawnNewDameableItem(DamageableType damageableType)
@@ -58,13 +65,15 @@ public class ItemSpawner : MonoBehaviour
         newDamageableObject.Initialize();
         return newDamageableObject;
     }
+
     private IEnumerator SpawnDamageableTimer(DamageableType damageableType, Vector3 spawnPosition,
         Quaternion spawnRotation)
     {
         yield return new WaitForSeconds(10);
         var newDamageableObject = damageableStorage[damageableType].Pull();
         newDamageableObject.transform.SetPositionAndRotation(spawnPosition, spawnRotation);
-        newDamageableObject.transform.DOShakeScale(0.4f, 0.3f).OnComplete(() => newDamageableObject.transform.localScale = Vector3.one);
+        newDamageableObject.transform.DOShakeScale(0.4f, 0.3f)
+            .OnComplete(() => newDamageableObject.transform.localScale = Vector3.one);
         newDamageableObject.Initialize();
     }
 

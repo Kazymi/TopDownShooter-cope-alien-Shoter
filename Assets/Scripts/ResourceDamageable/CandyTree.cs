@@ -29,6 +29,8 @@ public class CandyTree : Damageable
         base.HealthUpdated();
         var currentPercent = (float) currentHealth / maxHealth;
         currentPercent *= 100f;
+        transform.DOKill();
+        transform.DOShakeScale(0.4f, 0.3f).OnComplete(() => transform.localScale = Vector3.one);
         UpdatePercent(currentPercent);
     }
 

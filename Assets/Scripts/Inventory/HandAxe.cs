@@ -1,4 +1,6 @@
-﻿public class HandAxe : PlayerHandItem
+﻿using UnityEngine;
+
+public class HandAxe : PlayerHandItem
 {
     private InputController inputController;
     private CharacterAnimationController characterAnimationController;

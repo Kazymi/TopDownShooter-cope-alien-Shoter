@@ -3,4 +3,5 @@
     Bucket,
     FullBucket,
     Axe,
+    Clear,
 }
