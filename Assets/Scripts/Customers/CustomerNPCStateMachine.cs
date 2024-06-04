@@ -13,6 +13,7 @@ public class CustomerNPCStateMachine : MonoPooled
     private CustomersTable customersTable;
 
     private StateMachine stateMachine;
+    private CustomerConfiguration customerConfigurationParent;
     private CharacterAnimationController characterAnimationController;
     public bool IsItemsGrab;
 
@@ -45,12 +46,13 @@ public class CustomerNPCStateMachine : MonoPooled
     }
 
     public void InitializeCustomer(List<TableConfiguration> itemConfigurations, Transform spawnPosition,
-        Transform tablePosition, CustomersTable customersTable)
+        Transform tablePosition, CustomersTable customersTable,CustomerConfiguration parent)
     {
         this.itemConfigurations = itemConfigurations;
         this.tablePosition = tablePosition;
         this.spawnPosition = spawnPosition;
         this.customersTable = customersTable;
+        customerConfigurationParent = parent;
         InitializeStateMachine();
     }
 
@@ -108,7 +110,7 @@ public class CustomerNPCStateMachine : MonoPooled
                 return false;
             }
 
-            CustomerSpawner.Instance.SpawnCustomer();
+            customerConfigurationParent.SpawnCustomer();
             ReturnToPool();
             return true;
         })));

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class CharacterWalkState : State
 {
@@ -7,6 +8,8 @@ public class CharacterWalkState : State
     private readonly float _speedRotate;
     protected readonly Rigidbody _characterBody;
     protected readonly InputController _inputController;
+    private SaveData saveData;
+    private UpgradeConfiguration upgradeConfiguration;
 
     public CharacterWalkState(CharacterAnimationController characterAnimationController, float speed, float speedRotate,
         Rigidbody characterBody, InputController inputController)
@@ -37,7 +40,12 @@ public class CharacterWalkState : State
 
     protected virtual void Move()
     {
-        _characterBody.velocity = _inputController.MoveDirection * _speed;
+        saveData ??= ServiceLocator.GetService<SaveData>();
+        upgradeConfiguration ??=
+            ServiceLocator.GetService<UpgradeUIOpener>().GetUpgradeConfigurationByType(UpgradeType.Speed);
+        var saveHelper = saveData.UpgradeHelpers.Where(t => t.UpgradeType == UpgradeType.Speed).ToList()[0];
+        var fixSpeed = saveHelper.CurrentLevel * upgradeConfiguration.LevelProgressFactor * _speed;
+        _characterBody.velocity = _inputController.MoveDirection * (_speed + fixSpeed);
     }
 
     private void Rotate()
@@ -52,6 +60,9 @@ public class CharacterWalkState : State
 
 public class CharacterRunState : CharacterWalkState
 {
+    private SaveData saveData;
+    private UpgradeConfiguration upgradeConfiguration;
+
     private float runFloat;
 
     public CharacterRunState(CharacterAnimationController characterAnimationController, float speed, float speedRotate,
@@ -77,7 +88,12 @@ public class CharacterRunState : CharacterWalkState
 
     protected override void Move()
     {
-        _characterBody.velocity = _inputController.MoveDirection * _speed * 2;
+        saveData ??= ServiceLocator.GetService<SaveData>();
+        upgradeConfiguration ??=
+            ServiceLocator.GetService<UpgradeUIOpener>().GetUpgradeConfigurationByType(UpgradeType.Speed);
+        var saveHelper = saveData.UpgradeHelpers.Where(t => t.UpgradeType == UpgradeType.Speed).ToList()[0];
+        var fixSpeed = saveHelper.CurrentLevel * upgradeConfiguration.LevelProgressFactor * _speed;
+        _characterBody.velocity = _inputController.MoveDirection * ((_speed * 2) + fixSpeed);
     }
 
     public override void OnStateEnter()

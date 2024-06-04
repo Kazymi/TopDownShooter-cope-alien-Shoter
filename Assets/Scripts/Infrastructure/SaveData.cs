@@ -5,8 +5,14 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    public int Money;
+    public int Money = 600;
     public bool IsFirstLaunch;
+
+    public List<UpgradeHelper> UpgradeHelpers = new List<UpgradeHelper>()
+    {
+        new UpgradeHelper() {UpgradeType = UpgradeType.Speed, CurrentLevel = 0},
+        new UpgradeHelper() {UpgradeType = UpgradeType.AttackDamage, CurrentLevel = 0},
+    };
 
     public List<SaveStorage> SaveStorages = new List<SaveStorage>();
 
@@ -27,6 +33,7 @@ public class SaveStorage
     public string Key;
     public GameSaveConfiguration SaveConfiguration;
 }
+
 [Serializable]
 public class GameSaveConfiguration
 {
@@ -35,4 +42,11 @@ public class GameSaveConfiguration
     public InventorySaveHelper InventorySaveHelper;
     public SaveHealthHelper SaveHealthHelper;
     public NPCSpawnSaveHelper NPCSpawnSaveHelper;
+}
+
+[Serializable]
+public class UpgradeHelper
+{
+    public UpgradeType UpgradeType;
+    public int CurrentLevel;
 }

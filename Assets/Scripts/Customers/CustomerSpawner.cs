@@ -5,22 +5,36 @@ using Random = UnityEngine.Random;
 
 public class CustomerSpawner : MonoBehaviour
 {
+    [SerializeField] private CustomerConfiguration[] customerConfigurations;
     [SerializeField] private CustomerNPCStateMachine prefab;
 
-    [SerializeField] private Transform spawnPosition;
-    [SerializeField] private Transform tablePosition;
-    [SerializeField] private CustomersTable customersTable;
-
     private IPool<CustomerNPCStateMachine> pool;
-
-    public static CustomerSpawner Instance;
-
+    
     private void Awake()
     {
         var factory = new FactoryMonoObject<CustomerNPCStateMachine>(prefab.gameObject, transform);
         pool = new Pool<CustomerNPCStateMachine>(factory, 3);
+        
+        foreach (var customerConfiguration in customerConfigurations)
+        {
+            customerConfiguration.Initialize(pool);
+        }
+    }
+}
+
+[Serializable]
+public class CustomerConfiguration
+{
+    [field:SerializeField] public Transform SpawnPosition { get; private set; }
+    [field:SerializeField] public Transform TablePosition { get; private set; }
+    [field:SerializeField] public CustomersTable CustomersTable { get; private set; }
+    
+    private IPool<CustomerNPCStateMachine> pool;
+
+    public void Initialize(IPool<CustomerNPCStateMachine> pool)
+    {
+        this.pool = pool;
         SpawnCustomer();
-        Instance = this;
     }
 
     public void SpawnCustomer()
@@ -44,8 +58,9 @@ public class CustomerSpawner : MonoBehaviour
         }
 
         var newCustomer = pool.Pull();
-        newCustomer.transform.position = spawnPosition.position;
-        newCustomer.transform.rotation = spawnPosition.rotation;
-        newCustomer.InitializeCustomer(itemList, spawnPosition, tablePosition, customersTable);
+        
+        newCustomer.transform.position = SpawnPosition.position;
+        newCustomer.transform.rotation = SpawnPosition.rotation;
+        newCustomer.InitializeCustomer(itemList, SpawnPosition, TablePosition, CustomersTable,this);
     }
 }
